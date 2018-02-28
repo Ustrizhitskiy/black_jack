@@ -1,6 +1,6 @@
 class CardDeck
-  CARD_VALUES = %w(2 3 4 5 6 7 8 9 10 J Q K A)
-  CARD_SUITS = %w(♠ ♥ ♣ ♦)
+  CARD_VALUES = %w[2 3 4 5 6 7 8 9 10 J Q K A].freeze
+  CARD_SUITS = %w[♠ ♥ ♣ ♦].freeze
 
   attr_reader :all_cards
 
@@ -17,14 +17,8 @@ class CardDeck
         scores = 11 if value == 'A'
         card = Card.new("#{value}#{suit}", scores)
         @all_cards << card
-        #puts "#{card.name} - #{card.scores}"
+        # puts "#{card.name} - #{card.scores}"
       end
     end
   end
-
-  def give_a_card(card)
-    rand(@cards)
-  end
 end
-
-#deck = CardDeck.new

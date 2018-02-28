@@ -1,39 +1,58 @@
 class Interface
-  def initialize
-  end
-
   def intro
-    puts '********************************************************************'
-    print 'Введите свое имя: '
-    player = Player.new(gets.chomp.to_s)
+    player = Player.new(meeting)
     puts 'Начнем!'
     sleep(0.5)
-    diler = Diler.new
-    bank = Bank.new
-    card_deck = CardDeck.new
-    distribution(card_deck, player, diler, bank)
+    distribution(player)
   end
 
-  def distribution(card_deck, player, diler, bank)
+  def meeting
+    puts '********************************************************************'
+    print 'Введите свое имя: '
+    name = ''
+    while name.empty?
+      name = gets.chomp.to_s
+    end
+  end
+
+  def distribution(player)
+    bank = Bank.new
+    diler = Diler.new
     player.make_a_bet(bank, player)
     diler.make_a_bet(bank, diler)
-    player.first_distribution(card_deck)
+    card_deck_reduced = player.first_distribution(CardDeck.new)
+    card_deck_reduced = diler.first_distribution(card_deck_reduced)
+    #i = 0
+    #card_deck_reduced.all_cards.each do |card|
+    #  puts i
+    #  i += 1
+    #end
+    print "*************\n1. Взять карту.\n2. Пропустить ход
+    \r3. Открыть карты.\nВыберите пункт: "
+    article = gets.chomp.to_i
+    take_a_card(card_deck_reduced, player) if article == 1
+    diler_move(card_deck_reduced) if article == 2
+    end_of_game if article == 3
+  end
 
-    card = card_deck.all_cards[rand(51)]
-    card_deck.all_cards.delete(card)
+  def take_a_card(card_deck_reduced, player)
+    card = card_deck_reduced.all_cards[rand(48)]
+    card_deck_reduced.all_cards.delete(card)
     player.take_a_card(card)
-    puts "Ваши карты:\n\n"
-    player.cards.each { |card| puts "#{view_card(card)}"}
-    player.show_cards
+    player.cards.each { |card| puts "#{card.name}   |   #{card.scores}" }
+    diler_move
   end
 
-  def view_card(card)
-    puts "* * * * *
-        \r*       *
-        \r*       *
-        \r*  #{card.name}   *
-        \r*       *
-        \r*       *
-        \r* * * * *"
+  def diler_move
+    puts "Diler move"
   end
+
+  def end_of_game
+    puts "Открываем карты"
+  end
+
+  def game_over
+    abort
+  end
+
 end

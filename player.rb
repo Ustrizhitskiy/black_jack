@@ -12,7 +12,22 @@ class Player
 
   # получить две карты при первой раздаче
   def first_distribution(card_deck)
+    j = 52
+    get_two_cards(card_deck, j)
+    puts "*************************************************\nВаши карты:\n\n"
+    @cards.each { |card| puts "#{view_card(card)}" }
+    show_cards
+    card_deck
+  end
 
+  def view_card(card)
+    puts "* * * * *
+        \r*       *
+        \r*       *
+        \r*  #{card.name}   *
+        \r*       *
+        \r*       *
+        \r* * * * *"
   end
 
   # принять карту
@@ -23,7 +38,7 @@ class Player
     end
   end
 
-  # показать имеющтеся карты
+  # показать имеющиеся карты
   def show_cards
     @cards.each do |card|
       if card.scores != 11
@@ -38,4 +53,3 @@ class Player
   def skip_move
   end
 end
-
