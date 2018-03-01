@@ -1,6 +1,8 @@
 class Diler
   include MakeABet
-  attr_reader :bank, :cards, :scores
+
+  attr_reader :bank
+  attr_accessor :scores, :cards
 
   def initialize
     @bank = 100
@@ -8,14 +10,11 @@ class Diler
     @scores = 0
   end
 
-  # получить две карты при первой раздаче
   def first_distribution(card_deck_reduced)
     j = 50
     get_two_cards(card_deck_reduced, j)
     puts "*************************************************\nКарты дилера:\n"
     @cards.each { view_card }
-    #@cards.each { |card| puts view_card(card).to_s }
-    #show_cards
     card_deck_reduced
   end
 
@@ -29,15 +28,6 @@ class Diler
         \r* * * * *\n\n"
   end
 
-  # принять карту
-  def take_a_card(card)
-    if @cards.size <= 2
-      @cards << card
-      @scores += card.scores.to_i
-    end
-  end
-
-  # показать имеющиеся карты
   def show_cards
     @cards.each do |card|
       if card.scores != 11
@@ -48,16 +38,22 @@ class Diler
     end
   end
 
-  # показать карты в конце игры
+  def scores_not_enough
+    count = 0
+    @cards.each do |card|
+      count += 1 if card.scores == 11
+    end
+    @scores = 12 if count == 2
+    @scores
+  end
+
   def game_scores
     puts 'Карты дилера:'
     @cards.each do |card|
-      puts "#{card.name} - #{card.scores} очков"
+      puts card.name.to_s
     end
+    estimate_of_ace if @scores > 21
     puts "У дилера #{@scores} очков"
-  end
-
-  # пропустить ход (если очков 17 и более)
-  def skip_move
+    @scores
   end
 end

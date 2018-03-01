@@ -5,13 +5,11 @@ class Bank
     @money = 0
   end
 
-  # принять ставку
   def take_a_bet(bet)
     @money += bet
   end
 
-  # выдать деньги
-  def give_money
-    @money -= 10 if @money >= 10
+  def give_money(bet)
+    @money -= bet
   end
 end

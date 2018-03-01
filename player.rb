@@ -1,7 +1,8 @@
 class Player
   include MakeABet
 
-  attr_reader :name, :bank, :cards, :scores
+  attr_reader :name, :bank
+  attr_accessor :scores, :cards
 
   def initialize(name)
     @name = name
@@ -10,7 +11,6 @@ class Player
     @scores = 0
   end
 
-  # получить две карты при первой раздаче
   def first_distribution(card_deck)
     j = 52
     get_two_cards(card_deck, j)
@@ -30,15 +30,6 @@ class Player
         \r* * * * *"
   end
 
-  # принять карту
-  def take_a_card(card)
-    if @cards.size <= 2
-      @cards << card
-      @scores += card.scores.to_i
-    end
-  end
-
-  # показать имеющиеся карты
   def show_cards
     @cards.each do |card|
       if card.scores != 11
@@ -49,19 +40,15 @@ class Player
     end
   end
 
-  # показать карты в конце игры
   def game_scores
     puts 'Ваши карты:'
     @cards.each do |card|
-      puts "#{card.name}"
+      puts card.name.to_s
     end
-    puts "У Вас #{@scores} очков" if @scores <= 21
-  end
-
-  def estimate_of_ace
-  end
-
-  # пас
-  def skip_move
+    estimate_of_ace if @scores > 21
+    name = @name
+    puts "#{name}, у Вас #{@scores} очков"
+    puts '*****************************************************'
+    @scores
   end
 end
