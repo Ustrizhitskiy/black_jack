@@ -12,8 +12,10 @@ class Diler
   def first_distribution(card_deck_reduced)
     j = 50
     get_two_cards(card_deck_reduced, j)
-    puts "*************************************************\nКарты дилера:\n\n"
-    @cards.each { |card| puts "#{view_card}" }
+    puts "*************************************************\nКарты дилера:\n"
+    @cards.each { view_card }
+    #@cards.each { |card| puts view_card(card).to_s }
+    #show_cards
     card_deck_reduced
   end
 
@@ -24,7 +26,7 @@ class Diler
         \r* * * * *
         \r* * * * *
         \r* * * * *
-        \r* * * * *"
+        \r* * * * *\n\n"
   end
 
   # принять карту
@@ -33,6 +35,26 @@ class Diler
       @cards << card
       @scores += card.scores.to_i
     end
+  end
+
+  # показать имеющиеся карты
+  def show_cards
+    @cards.each do |card|
+      if card.scores != 11
+        puts "#{card.name} - #{card.scores} очков"
+      else
+        puts "#{card.name} - 1 или 11 очков"
+      end
+    end
+  end
+
+  # показать карты в конце игры
+  def game_scores
+    puts 'Карты дилера:'
+    @cards.each do |card|
+      puts "#{card.name} - #{card.scores} очков"
+    end
+    puts "У дилера #{@scores} очков"
   end
 
   # пропустить ход (если очков 17 и более)

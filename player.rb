@@ -15,7 +15,7 @@ class Player
     j = 52
     get_two_cards(card_deck, j)
     puts "*************************************************\nВаши карты:\n\n"
-    @cards.each { |card| puts "#{view_card(card)}" }
+    @cards.each { |card| puts view_card(card).to_s }
     show_cards
     card_deck
   end
@@ -47,6 +47,18 @@ class Player
         puts "#{card.name} - 1 или 11 очков"
       end
     end
+  end
+
+  # показать карты в конце игры
+  def game_scores
+    puts 'Ваши карты:'
+    @cards.each do |card|
+      puts "#{card.name}"
+    end
+    puts "У Вас #{@scores} очков" if @scores <= 21
+  end
+
+  def estimate_of_ace
   end
 
   # пас
