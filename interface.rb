@@ -35,20 +35,24 @@ class Interface
   end
 
   def continue_game(article, card_deck_reduced, player, diler)
+    if article == 2
+      diler_move(card_deck_reduced, diler)
+      end_of_game(player, diler, card_deck_reduced)
+    end
+    end_of_game(player, diler, card_deck_reduced) if article == 3
     return unless article == 1
     take_a_card(card_deck_reduced, player)
     puts "*************************************************\nВаши карты:\n\n"
     player.cards.each { |card| puts player.view_card(card).to_s }
     diler_move(card_deck_reduced, diler)
-    diler_move(card_deck_reduced, diler) if article == 2
-    end_of_game(player, diler)
+    end_of_game(player, diler, card_deck_reduced)
   end
 
   def take_a_card(card_deck_reduced, participant)
-    card = card_deck_reduced.all_cards[rand(@count)]
+    card = card_deck_reduced.all_cards.shuffle[0]
     @count -= 1
     card_deck_reduced.all_cards.delete(card)
-    participant.take_a_card(card)
+    participant.take_a_card(card, card_deck_reduced)
     participant.show_cards if participant.is_a? Player
   end
 
@@ -60,11 +64,13 @@ class Interface
     diler.cards.each { diler.view_card }
   end
 
-  def end_of_game(player, diler)
+  def end_of_game(player, diler, card_deck_reduced)
     print "***********************************************************
           \rНажмите любую клавишу, чтобы посмотреть результат кона...
           \r***********************************************************"
     gets
+    card_deck_reduced.to_s
+    card_deck_reduced.show_all_scores_in_deck
     player_scores = player.game_scores
     diler_scores = diler.game_scores
     winer_and_looser(player_scores, diler_scores, player, diler)
@@ -73,7 +79,7 @@ class Interface
 
   def winer_and_looser(player_scores, diler_scores, player, diler)
     if (player_scores > diler_scores && player_scores <= 21) ||
-       (player_scores < diler_scores && diler_scores > 21)
+       (player_scores < diler_scores && diler_scores > 21 && player_scores <= 21)
       puts 'Вы выиграли!'
       2.times { player.receive_money(@bank) }
     end
