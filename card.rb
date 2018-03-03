@@ -1,10 +1,12 @@
 class Card
-  attr_reader :name, :scores, :card
+  attr_reader :name, :scores
 
   def initialize(name, scores)
     @name = name
     @scores = scores
-    @card = self.name
-    print @card
+  end
+
+  def to_s
+    str = String.new + @name.to_s
   end
 end

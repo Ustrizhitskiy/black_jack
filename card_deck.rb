@@ -3,13 +3,9 @@ class CardDeck
   CARD_SUITS = %w[♠ ♥ ♣ ♦].freeze
 
   attr_reader :all_cards
-  attr_accessor :all_scores_in_deck#, :card
 
   def initialize
-    @all_scores_in_deck = 0
     @all_cards = []
-    create_new_deck
-    self.show_all_scores_in_deck
   end
 
   def create_new_deck
@@ -20,19 +16,21 @@ class CardDeck
         scores = 11 if value == 'A'
         card = Card.new("#{value}#{suit}  ", scores)
         @all_cards << card
-        @all_scores_in_deck += scores.to_i
       end
     end
     @all_cards.shuffle!
+    self
   end
 
   def show_all_scores_in_deck
-    puts "\nВ колоде #{@all_scores_in_deck} (#{@all_scores_in_deck - 40}) очков."
+    @all_cards.inject(0) do |sum, card2|
+      sum + card2.scores.to_i
+    end
   end
 
   def to_s
-    puts 'Карты, не сыгравшие в этой игре:'
-    @all_cards.each { |card| print card.name }
-    puts
+    str = String.new
+    @all_cards.each { |card, index| str += card.name.to_s }
+    "Карты в колоде: \n\r#{str}"
   end
 end

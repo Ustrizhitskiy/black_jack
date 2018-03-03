@@ -6,7 +6,7 @@ class Diler < Paripicipant
   def first_distribution(card_deck_reduced)
     get_two_cards(card_deck_reduced)
     puts "*************************************************\nКарты #{@name}:\n"
-    @cards.each { view_card }
+    @deck.all_cards.each { view_card }
     card_deck_reduced
   end
 
@@ -16,10 +16,11 @@ class Diler < Paripicipant
 
   def scores_not_enough
     count = 0
-    @cards.each do |card|
+    scores = 0
+    @deck.all_cards.each do |card|
       count += 1 if card.scores == 11
     end
-    @scores = 12 if count == 2
-    @scores
+    scores = 12 if count == 2
+    scores
   end
 end

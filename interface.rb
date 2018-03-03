@@ -26,7 +26,7 @@ class Interface
     @bank = Bank.new
     player.make_a_bet(@bank, player)
     diler.make_a_bet(@bank, diler)
-    card_deck_reduced = player.first_distribution(CardDeck.new)
+    card_deck_reduced = player.first_distribution(CardDeck.new.create_new_deck)
     card_deck_reduced = diler.first_distribution(card_deck_reduced)
     print "*************\n1. Взять карту.\n2. Пропустить ход
     \r3. Открыть карты.\nВыберите пункт: "
@@ -43,7 +43,7 @@ class Interface
     return unless article == 1
     take_a_card(card_deck_reduced, player)
     puts "*************************************************\nВаши карты:\n\n"
-    player.cards.each { |card| puts player.view_card(card).to_s }
+    player.deck.all_cards.each { |card| puts player.view_card(card) }
     diler_move(card_deck_reduced, diler)
     end_of_game(player, diler, card_deck_reduced)
   end
@@ -61,15 +61,14 @@ class Interface
     sleep(0.5)
     take_a_card(card_deck_reduced, diler) if diler.scores_not_enough < 17
     puts "*************************************************\nКарты дилера:\n"
-    diler.cards.each { diler.view_card }
+    diler.deck.all_cards.each { diler.view_card }
   end
 
   def end_of_game(player, diler, card_deck_reduced)
     print "***********************************************************
-          \rНажмите любую клавишу, чтобы посмотреть результат кона...
-          \r***********************************************************"
+          \rНажмите любую клавишу, чтобы посмотреть результат кона..."
     gets
-    card_deck_reduced.to_s
+    puts card_deck_reduced.to_s
     card_deck_reduced.show_all_scores_in_deck
     player_scores = player.game_scores
     diler_scores = diler.game_scores

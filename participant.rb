@@ -1,14 +1,21 @@
 class Paripicipant
   include MakeABet
 
-  attr_accessor :scores, :cards
+  attr_accessor :scores, :cards, :deck
   attr_reader   :bank, :name
 
   def initialize(name)
     @name = name
     @bank = 100
-    @cards = []
-    @scores = 0
+    @deck = CardDeck.new
+  end
+
+  def first_distribution(card_deck)
+    get_two_cards(card_deck)
+    puts "*************************************************\nКарты #{@name}:\n\n"
+    @deck.all_cards.each { |card| puts card.to_s }
+    show_cards
+    card_deck
   end
 
   def get_two_cards(card_deck)
@@ -21,15 +28,12 @@ class Paripicipant
   end
 
   def take_a_card(card, card_deck)
-    return unless @cards.size <= 2
-    card_deck.all_scores_in_deck -= card.scores.to_i
-    @cards << card
-    @scores += card.scores.to_i
+    @deck.all_cards << card
   end
 
   def estimate_of_ace
     count = 0
-    @cards.each do |card|
+    @deck.all_cards.each do |card|
       count += 1 if card.scores == 11
     end
     @scores -= 10 if count == 1 && @scores > 21
@@ -43,16 +47,14 @@ class Paripicipant
   end
 
   def reload
-    @cards = []
-    @scores = 0
+    @deck = CardDeck.new
   end
 
   def game_scores
     name = @name
     puts "У #{name} карты:"
-    @cards.each do |card|
-      puts card.name.to_s
-    end
+    puts @deck.to_s
+    @scores = @deck.show_all_scores_in_deck
     estimate_of_ace if @scores > 21
     puts "У #{name} #{@scores} очков"
     puts '*****************************************************'
@@ -60,7 +62,7 @@ class Paripicipant
   end
 
   def show_cards
-    @cards.each do |card|
+    @deck.all_cards.each do |card|
       if card.scores != 11
         puts "#{card.name} - #{card.scores} очков"
       else
