@@ -11,7 +11,7 @@ class Diler < Paripicipant
   end
 
   def view_card
-    puts "**\n\n"
+    puts '**'
   end
 
   def scores_not_enough

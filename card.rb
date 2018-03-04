@@ -3,10 +3,10 @@ class Card
 
   def initialize(name, scores)
     @name = name
-    @scores = scores
+    @scores = scores.to_i
   end
 
   def to_s
-    str = String.new + @name.to_s
+    @name.to_s
   end
 end

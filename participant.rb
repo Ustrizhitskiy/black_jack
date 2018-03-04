@@ -10,27 +10,6 @@ class Paripicipant
     @deck = CardDeck.new
   end
 
-  def first_distribution(card_deck)
-    get_two_cards(card_deck)
-    puts "*************************************************\nКарты #{@name}:\n\n"
-    @deck.all_cards.each { |card| puts card.to_s }
-    show_cards
-    card_deck
-  end
-
-  def get_two_cards(card_deck)
-    2.times do
-      card = card_deck.all_cards.shuffle[0]
-      card_deck.all_cards.delete(card)
-      take_a_card(card, card_deck)
-    end
-    card_deck
-  end
-
-  def take_a_card(card, card_deck)
-    @deck.all_cards << card
-  end
-
   def estimate_of_ace
     count = 0
     @deck.all_cards.each do |card|
@@ -52,16 +31,17 @@ class Paripicipant
 
   def game_scores
     name = @name
-    puts "У #{name} карты:"
-    puts @deck.to_s
+    puts "У #{name}:"
+    puts @deck
     @scores = @deck.show_all_scores_in_deck
     estimate_of_ace if @scores > 21
-    puts "У #{name} #{@scores} очков"
+    puts "#{@scores} очков"
     puts '*****************************************************'
     @scores
   end
 
   def show_cards
+    puts "Карты #{name}"
     @deck.all_cards.each do |card|
       if card.scores != 11
         puts "#{card.name} - #{card.scores} очков"

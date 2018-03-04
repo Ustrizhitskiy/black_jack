@@ -8,7 +8,7 @@ class CardDeck
     @all_cards = []
   end
 
-  def create_new_deck
+  def fill_deck
     CARD_VALUES.each do |value|
       CARD_SUITS.each do |suit|
         scores = value if value.to_i.nonzero?
@@ -18,19 +18,34 @@ class CardDeck
         @all_cards << card
       end
     end
-    @all_cards.shuffle!
     self
   end
 
   def show_all_scores_in_deck
     @all_cards.inject(0) do |sum, card2|
-      sum + card2.scores.to_i
+      sum + card2.scores
     end
   end
 
   def to_s
-    str = String.new
-    @all_cards.each { |card, index| str += card.name.to_s }
+    str = ''
+    each_card do |card|
+      str += card.name
+    end
     "Карты в колоде: \n\r#{str}"
+  end
+
+  def each_card
+    @all_cards.each { |card| yield(card) } if block_given?
+  end
+
+  def get_two_cards(participant)
+    2.times { take_a_card(participant) }
+  end
+
+  def take_a_card(participant)
+    card = @all_cards.sample
+    participant.deck.all_cards << card
+    @all_cards.delete(card)
   end
 end
