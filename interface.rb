@@ -1,34 +1,27 @@
 class Interface
-  attr_reader :bank
+  attr_reader :account
 
-  def initialize
-    @bank = bank
+  def initialize(player, diler, deck_game)
+    @game_account = account
+    @player = player
+    @diler = diler
+    @deck_game = deck_game
   end
 
-  def intro
-    player = Player.new(meeting)
-    diler = Diler.new
+  def intro(player, diler)
     puts 'Начнем!'
     sleep(0.5)
     distribution(player, diler)
   end
 
-  def meeting
-    puts '********************************************************************'
-    print 'Введите свое имя: '
-    name = ''
-    name = gets.chomp.to_s while name.empty?
-    name
-  end
-
   def distribution(player, diler)
-    @bank = Bank.new
-    player.make_a_bet(@bank, player)
-    diler.make_a_bet(@bank, diler)
+    @game_account = Account.new
+    @game_account.receive_bet(player)
+    @game_account.receive_bet(diler)
     deck_game = CardDeck.new.fill_deck
-    deck_game.get_two_cards(player)
-    player.show_cards
-    deck_game.get_two_cards(diler)
+    deck_game.give_two_cards(player)
+    deck_game.show_cards(player)
+    deck_game.give_two_cards(diler)
     puts "Карты #{diler.name}:"
     2.times { diler.view_card }
     choose(deck_game, player, diler)
@@ -64,24 +57,25 @@ class Interface
     sleep(0.5)
     deck_game.take_a_card(diler) if diler.scores_not_enough < 17
     puts "*************************************************\nКарты дилера:\n"
-    diler.deck.all_cards.each { diler.view_card }
+    diler.deck.each_card { diler.view_card }
   end
 
   def end_of_game(player, diler)
     print "***********************************************************
           \rНажмите любую клавишу, чтобы посмотреть результат кона..."
     gets
-    player_scores = player.game_scores
-    diler_scores = diler.game_scores
+    player_scores = player.deck.game_scores(player)
+    diler_scores = diler.deck.game_scores(diler)
     winer_and_looser(player_scores, diler_scores, player, diler)
-    repeat(player, diler)
+    puts "#{player.name}, у Вас всего #{player.account.money} USD."
+    print "У дилера #{diler.account.money} USD."
   end
 
   def winer_and_looser(player_scores, diler_scores, player, diler)
     if (player_scores > diler_scores && player_scores <= 21) ||
        (player_scores < diler_scores && diler_scores > 21 && player_scores <= 21)
       puts 'Вы выиграли!'
-      2.times { player.receive_money(@bank) }
+      2.times { @game_account.give_money(player) }
     end
     looser(player_scores, diler_scores, player, diler)
     equally(player_scores, diler_scores, player, diler)
@@ -91,37 +85,14 @@ class Interface
     return unless (player_scores < diler_scores && diler_scores <= 21) ||
                   player_scores > 21
     puts "#{player.name}, Вы проиграли!"
-    2.times { diler.receive_money(@bank) }
+    2.times { @game_account.give_money(diler) }
   end
 
   def equally(player_scores, diler_scores, player, diler)
     return unless player_scores == diler_scores
     puts 'Ничья!'
-    player.receive_money(@bank)
-    diler.receive_money(@bank)
-  end
-
-  def repeat(player, diler)
-    enough_money(player, diler)
-    puts "#{player.name}, у Вас всего #{player.bank} USD."
-    print "У дилера #{diler.bank} USD.\n\rХотите продолжить? (Y / N): "
-    switch = gets.chomp.to_s
-    if %w[y Y].include?(switch)
-      player.reload
-      diler.reload
-      distribution(player, diler)
-    else game_over
-    end
-  end
-
-  def enough_money(player, diler)
-    if diler.bank.zero?
-      puts 'Вы выиграли все деньги дилера!'
-      game_over
-    elsif player.bank.zero?
-      puts 'Вы проиграли все свои деньги!'
-      game_over
-    end
+    @game_account.give_money(player)
+    @game_account.give_money(diler)
   end
 
   def game_over
