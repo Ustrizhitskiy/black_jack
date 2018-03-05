@@ -1,4 +1,4 @@
-class Diler < Paripicipant
+class Diler < Participant
   def initialize(name = 'Diler')
     super(name)
   end

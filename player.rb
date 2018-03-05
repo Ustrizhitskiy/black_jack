@@ -1,2 +1,2 @@
-class Player < Paripicipant
+class Player < Participant
 end

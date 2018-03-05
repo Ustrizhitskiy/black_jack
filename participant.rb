@@ -1,6 +1,4 @@
-class Paripicipant
-  include MakeABet
-
+class Participant
   attr_accessor :scores, :cards, :deck
   attr_reader   :account, :name
 

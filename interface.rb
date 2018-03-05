@@ -18,7 +18,7 @@ class Interface
     @game_account = Account.new
     @game_account.receive_bet(player)
     @game_account.receive_bet(diler)
-    deck_game = CardDeck.new.fill_deck
+    deck_game = @deck_game
     deck_game.give_two_cards(player)
     deck_game.show_cards(player)
     deck_game.give_two_cards(diler)
